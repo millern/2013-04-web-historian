@@ -2,6 +2,7 @@ var handler = require("../web/request-handler");
 handler.datadir = __dirname + "/testdata/sites.txt";
 var stubs = require("./helpers/stubs");
 var res;
+var fs = require('fs');
 
 // allows us to run tests async
 function async(cb){
@@ -36,7 +37,7 @@ describe("Node Server Request Listener Function", function() {
     });
   });
 
-  xit("Should accept posts to /", function() {
+  it("Should accept posts to /", function() {
     fs.writeFileSync(handler.datadir, ""); // reset the test file
 
     var url = "www.example.com";
@@ -45,7 +46,7 @@ describe("Node Server Request Listener Function", function() {
     handler.handleRequest(req, res);
 
     var fileContents = fs.readFileSync(handler.datadir);
-    expect(res._responseCode).toEqual(302);
+    expect(res._responseCode).toEqual(201);
     expect(fileContents).toEqual(url + "\n");
     expect(res._ended).toEqual(true);
   });

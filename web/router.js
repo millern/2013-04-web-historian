@@ -1,5 +1,6 @@
 var fs = require('fs');
 var trail = require('path');
+var qs = require('querystring');
 var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -63,12 +64,25 @@ var routes = {
 
   "POST": [
     {
-     pattern: /[^+]*/,
+     pattern: /\/$/,
      method: function(request, response, target){
       console.log("Post request received");
-      response.writeHead(200,headers);
-      console.log(target);
-      response.end(target);
+      var body = "";
+      request.on('data', function(data){
+        body += data;
+        if (body.length > 1e6) { // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
+          request.connection.destroy(); // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+        }
+      });
+      request.on('end', function(){
+        var parseBody = qs.parse(body);
+        fs.writeFile(trail.join(__dirname,'..','data/sites.txt'), parseBody['url'], 'utf8', function(error){
+          if(error) throw error;
+
+        });
+      });
+      response.writeHead(201,headers);
+      response.end();
      }
     }
   ],
