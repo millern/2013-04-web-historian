@@ -2,11 +2,21 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="styles.css" />
+  <script src="lib/jquery.js"></script>
 </head>
 <body>
-  <form method="POST">
-    <input type="input" name="url"></input>
-    <button type="submit">submit</button>
-  </form>
+    <input class="input" type="input" name="url" ></input>
+    <button class="submit" type="submit">submit</button>
+<script>
+$('.submit').on('click',function(event){
+  event.preventDefault();
+  $.post("/",{url: $('.input').val()},function(){
+    console.log('worked');
+  });
+  $('.input').val("");
+})
+
+</script>
+
 </body>
 </html>

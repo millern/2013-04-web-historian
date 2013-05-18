@@ -1,1 +1,1 @@
-www.example.com
+{"www.example.com":[true,true],"www.google.com":[true,true],"www.nytimes.com":[true]}

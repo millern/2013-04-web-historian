@@ -1,6 +1,7 @@
 var fs = require('fs');
 var trail = require('path');
 var qs = require('querystring');
+var dataFile = require('./dataFile.js');
 var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -12,14 +13,20 @@ var headers = defaultCorsHeaders;
 var routes = {
   "GET": [
     {
-      pattern: /([w]*\.[^+]*\.[^+]*)$/,
+      pattern: /([w]*\.[^+]*\.[^+]*)$/,//check to make sure we match something in sites.txt
       method: function(request, response, path){
         headers['content-type'] = "text/html";
-        response.writeHead(200,headers);
-        var file = fs.readFile(trail.join(__dirname,'..','data/sites',path), 'utf8',function(error,data){
+        if (dataFile.hasData(path)){
+          response.writeHead(200,headers);
+          var file = fs.readFile(trail.join(__dirname,'..','data/sites',path), 'utf8',function(error,data){
           if (error) throw error;
           response.end(data);
         });
+        } else {
+          response.writeHead(404,headers);
+          response.end();
+        }
+
       }
     },
     {
@@ -31,7 +38,7 @@ var routes = {
         console.log("GET request received...serving file");
         var file = fs.readFile(__dirname + '/public/' + path + '.' + filetype, 'utf8', function(error, data) {
           console.log('public'+path+'.'+filetype);
-          if (error) throw error;
+          //if (error) throw error;
           headers['content-type']  = "text/"+filetype;
           response.writeHead(200, headers);
           response.end(data);
@@ -75,10 +82,10 @@ var routes = {
         }
       });
       request.on('end', function(){
-        var parseBody = qs.parse(body);
-        fs.writeFile(trail.join(__dirname,'..','data/sites.txt'), parseBody['url'], 'utf8', function(error){
+        var parseBody = qs.parse(body); //write to the end of the file
+        fs.appendFile(trail.join(__dirname,'..','data/sites.txt'), parseBody.url + '\n', 'utf8', function(error){
           if(error) throw error;
-
+          dataFile.setData(parseBody.url, true);
         });
       });
       response.writeHead(201,headers);
