@@ -19,9 +19,8 @@ describe("html fetcher helpers", function(){
       expect(resultArray).toEqual(urlArray);
     });
   });
-  
-  xit("should have a 'downloadUrls' function", function(){
-    var result = htmlFetcherHelpers.downloadUrls();
+  it("should have a 'downloadUrls' function", function(){
+    var result = htmlFetcherHelpers.downloadUrls("www.yahoo.com");
     expect(result).toBeTruthy();
   });
 });
