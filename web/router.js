@@ -56,8 +56,8 @@ var routes = {
      pattern: /[^+]*/,
      method: function(request, response, target){
       console.log("GET request received");
-      response.writeHead(200, headers);
-      response.end('matched default string');
+      response.writeHead(404, headers);
+      response.end('Not Found');
      }
     }
   ],

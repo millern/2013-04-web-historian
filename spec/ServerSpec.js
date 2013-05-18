@@ -36,7 +36,14 @@ describe("Node Server Request Listener Function", function() {
       expect(res._ended).toEqual(true);
     });
   });
-
+  it("Should 404 when asked for a nonexistent file", function() {
+    var req = new stubs.Request("http://127.0.0.1:8080/arglebargle", "GET");
+    handler.handleRequest(req, res);
+    async(function() {
+      expect(res._responseCode).toEqual(404);
+      expect(res._ended).toEqual(true);
+    });
+  });
   it("Should accept posts to /", function() {
     fs.writeFileSync(handler.datadir, ""); // reset the test file
 
@@ -45,19 +52,14 @@ describe("Node Server Request Listener Function", function() {
 
     handler.handleRequest(req, res);
 
-    var fileContents = fs.readFileSync(handler.datadir);
-    expect(res._responseCode).toEqual(201);
-    expect(fileContents).toEqual(url + "\n");
-    expect(res._ended).toEqual(true);
-  });
-
-  xit("Should 404 when asked for a nonexistent file", function() {
-    var req = new stubs.Request("http://127.0.0.1:8080/arglebargle", "GET");
-    handler.handleRequest(req, res);
-    async(function() {
-      expect(res._responseCode).toEqual(404);
+    var fileContents = fs.readFile(handler.datadir,function(){
+      expect(res._responseCode).toEqual(201);
+      expect(fileContents).toEqual(url + "\n");
       expect(res._ended).toEqual(true);
     });
+
   });
+
+
 
 });
