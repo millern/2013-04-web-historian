@@ -1,4 +1,5 @@
 var fs = require('fs');
+var trail = require('path');
 var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -10,11 +11,24 @@ var headers = defaultCorsHeaders;
 var routes = {
   "GET": [
     {
+      pattern: /([w]*\.[^+]*\.[^+]*)$/,
+      method: function(request, response, path){
+        headers['content-type'] = "text/html";
+        response.writeHead(200,headers);
+        var file = fs.readFile(trail.join(__dirname,'..','data/sites',path), 'utf8',function(error,data){
+          if (error) throw error;
+          response.end(data);
+        });
+      }
+    },
+    {
       pattern: /([^+]*)\.([^+]*)/,
       method: function (request, response, path, filetype) {
-        if (!(filetype === "ico")) {
-        console.log("GET request received");
-        var file = fs.readFile('public/' + path + '.' + filetype, 'utf8', function(error, data) {
+        console.log("TRUE DIR NAME");
+        console.log(__dirname + '/public/index.html');
+        if (filetype !== "ico") {
+        console.log("GET request received...serving file");
+        var file = fs.readFile(__dirname + '/public/' + path + '.' + filetype, 'utf8', function(error, data) {
           console.log('public'+path+'.'+filetype);
           if (error) throw error;
           headers['content-type']  = "text/"+filetype;
@@ -49,7 +63,13 @@ var routes = {
 
   "POST": [
     {
-
+     pattern: /[^+]*/,
+     method: function(request, response, target){
+      console.log("Post request received");
+      response.writeHead(200,headers);
+      console.log(target);
+      response.end(target);
+     }
     }
   ],
 
