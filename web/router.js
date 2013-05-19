@@ -83,10 +83,7 @@ var routes = {
       });
       request.on('end', function(){
         var parseBody = qs.parse(body); //write to the end of the file
-        fs.appendFile(trail.join(__dirname,'..','data/sites.txt'), parseBody.url + '\n', 'utf8', function(error){
-          if(error) throw error;
           dataFile.setData(parseBody.url, true);
-        });
       });
       response.writeHead(201,headers);
       response.end();

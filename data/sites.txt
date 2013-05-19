@@ -1,1 +1,1 @@
-{"www.example.com":[true,true],"www.google.com":[true,true],"www.nytimes.com":[true]}
+{"www.example.com":[true,true],"www.google.com":[true,true],"www.nytimes.com":[true],"www.msn.com":[true],"www.doug.com":[true],"www.nick.com":[true],"www.happy.com":[true],"www.victory.com":[true]}
