@@ -1,1 +1,1 @@
-{"www.example.com":[true,true],"www.google.com":[true,true],"www.nytimes.com":[true],"www.msn.com":[true],"www.doug.com":[true],"www.nick.com":[true],"www.happy.com":[true],"www.victory.com":[true]}
+{"www.google.com":["2013_May_19th_11_52"],"www.yahoo.com":["2013_May_19th_11_52"],"www.nytimes.com":["2013_May_19th_11_54","2013_May_19th_11_54"],"www.example.com":["2013_May_19th_12_05","2013_May_19th_12_07"],"www.anotherexample.com":["2013_May_19th_12_05"]}

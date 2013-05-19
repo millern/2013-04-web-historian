@@ -1,6 +1,7 @@
 var fs = require('fs');
 var trail = require('path');
 var qs = require('querystring');
+var moment = require('moment');
 var dataFile = require('./dataFile.js');
 var defaultCorsHeaders = {
   "access-control-allow-origin": "*",
@@ -13,14 +14,20 @@ var headers = defaultCorsHeaders;
 var routes = {
   "GET": [
     {
-      pattern: /([w]*\.[^+]*\.[^+]*)$/,//check to make sure we match something in sites.txt
+      pattern: /([w]*\.[^+]*\.[^+]*)$/,
       method: function(request, response, path){
+        console.log(path);
         headers['content-type'] = "text/html";
         if (dataFile.hasData(path)){
-          response.writeHead(200,headers);
           var file = fs.readFile(trail.join(__dirname,'..','data/sites',path), 'utf8',function(error,data){
-          if (error) throw error;
-          response.end(data);
+          if (error) {
+            response.writeHead(404,headers);
+            response.end();
+            console.log(error);
+          } else {
+            response.writeHead(200,headers);
+            response.end(data);
+          }
         });
         } else {
           response.writeHead(404,headers);
@@ -83,7 +90,7 @@ var routes = {
       });
       request.on('end', function(){
         var parseBody = qs.parse(body); //write to the end of the file
-          dataFile.setData(parseBody.url, true);
+          dataFile.setData(parseBody.url, moment().format("YYYY_MMMM_Do_hh_mm"));
       });
       response.writeHead(201,headers);
       response.end();

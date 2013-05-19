@@ -1,11 +1,13 @@
 // eventually, you'll have some code here that uses the tested helpers 
 // to actually download the urls you want to download.
+var fs = require('fs');
 var trail = require('path');
 var htmlFetcher = require('./lib/html-fetcher-helpers.js');
-console.log("running app");
-var filePath = trail.join(__dirname,'..','data/sites.txt');
-htmlFetcher.readUrls(filePath,function(url){
-  htmlFetcher.downloadUrls(url);
-  console.log("downloaded from "+url);
+var filePath = trail.join(__dirname,'..','data/sitesToDL.txt');
+
+htmlFetcher.readUrls(filePath,function(url, date){
+  console.log("reading urls from :",filePath);
+  htmlFetcher.downloadUrls(url, date);
 });
-console.log("downloaded urls");
+
+
