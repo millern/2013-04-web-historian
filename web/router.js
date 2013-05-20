@@ -16,7 +16,6 @@ var routes = {
     {
       pattern: /([w]*\.[^+]*\.[^+]*[\/][^.]*)/,
       method: function(request, response, path){
-        console.log('valid pattern' + path);
         headers['content-type'] = 'text/html';
         fs.readFile(trail.join(__dirname,'..','data/sites',path), 'utf8', function(error, data){
           if(error) console.log(error);
@@ -28,14 +27,13 @@ var routes = {
     {
       pattern: /([w]*\.[^+]*\.[^+]*)$/,
       method: function(request, response, path){
-        console.log(path);
         headers['content-type'] = "text/html";
         if (dataFile.hasData(path)){
           var files = dataFile.getData(path);
           var body = "";
           response.writeHead(200,headers);
           for (var i = 0; i < files.length; i++) {
-            body+=('<a href="'+path+'/'+files[i]+'">'+files[i]+'</a><br />', 'utf8');
+            body+=('<a href="'+path+'/'+files[i]+'">'+files[i]+'</a><br />');
           }
           response.end(body);
         } else {
@@ -48,27 +46,19 @@ var routes = {
     {
       pattern: /([^+]*)\.([^+]*)/,
       method: function (request, response, path, filetype) {
-        console.log("TRUE DIR NAME");
-        console.log(__dirname + '/public/index.html');
-        if (filetype !== "ico") {
-        console.log("GET request received...serving file");
         var file = fs.readFile(__dirname + '/public/' + path + '.' + filetype, 'utf8', function(error, data) {
-          console.log('public'+path+'.'+filetype);
-          //if (error) throw error;
+          if (error) console.log(error);
           headers['content-type']  = "text/"+filetype;
           response.writeHead(200, headers);
           response.end(data);
         });
-        }
       }
     },
     {
       pattern: /\/$/,
       method: function(request, response, target) {
-        console.log("TRUE DIR NAME");
-        console.log(__dirname + '/public/index.html');
         var file = fs.readFile(__dirname + '/public/index.html', 'utf8', function(error, data) {
-          if (error) throw error;
+          if (error) console.log(error);
           headers['content-type'] = 'text/html';
           response.writeHead(200, headers);
           response.end(data);
@@ -78,9 +68,8 @@ var routes = {
     {
      pattern: /[^+]*/,
      method: function(request, response, target){
-      console.log("GET request received");
       response.writeHead(404, headers);
-      response.end('Not Found');
+      response.end();
      }
     }
   ],
@@ -89,7 +78,6 @@ var routes = {
     {
      pattern: /\/$/,
      method: function(request, response, target){
-      console.log("Post request received");
       var body = "";
       request.on('data', function(data){
         body += data;

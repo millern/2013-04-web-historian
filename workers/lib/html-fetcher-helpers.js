@@ -6,21 +6,15 @@ var promised = require('promised-io');
 exports.readUrls = function(filePath, cb){
   var urlHash;
   var file = fs.readFile(filePath, 'utf8', function(error,data){
-    console.log("Here is the data " + data);
     if(data){
-    urlHash = JSON.parse(data);
-    console.log("Here is the parsed data " + urlHash);
-    var returnArray = [];
+      urlHash = JSON.parse(data);
+      var returnArray = [];
     for(var key in urlHash){
       cb(key,urlHash[key][0]);
-      console.log(urlHash[key][0]); //if we have duplicate websites, just take the first one
     }
     fs.writeFile(filePath,"",function(error){
       if (error) throw error;
-    console.log("File overwritten");
     });
-    } else {
-      console.log("Nothing to write");
     }
   });
 };
