@@ -26,10 +26,11 @@ exports.readUrls = function(filePath, cb){
 };
 
 exports.downloadUrls = function(url, date){
-  console.log(date);
-  httpGet.get(url,trail.join(__dirname,"../..","data/sites",url+date),function(error,result){
+  if(!fs.existsSync(trail.join(__dirname,"../..","data/sites",url))){
+    fs.mkdir(trail.join(__dirname,"../..","data/sites",url));
+  }
+  httpGet.get(url,trail.join(__dirname,"../..","data/sites",url,date),function(error,result){
     if (error){console.error(error);}
     else {console.log("File downloaded at: "+ result.file);}
   });
-
 };

@@ -32,7 +32,6 @@ describe("Node Server Request Listener Function", function() {
     handler.handleRequest(req, res);
     async(function(){
       expect(res._responseCode).toEqual(200);
-      expect(res._data).toMatch(/google/); // the resulting html should have the text "google"
       expect(res._ended).toEqual(true);
     });
   });

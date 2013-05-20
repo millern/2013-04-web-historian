@@ -14,21 +14,30 @@ var headers = defaultCorsHeaders;
 var routes = {
   "GET": [
     {
+      pattern: /([w]*\.[^+]*\.[^+]*[\/][^.]*)/,
+      method: function(request, response, path){
+        console.log('valid pattern' + path);
+        headers['content-type'] = 'text/html';
+        fs.readFile(trail.join(__dirname,'..','data/sites',path), 'utf8', function(error, data){
+          if(error) console.log(error);
+          response.writeHead(200, headers);
+          response.end(data);
+        });
+      }
+    },
+    {
       pattern: /([w]*\.[^+]*\.[^+]*)$/,
       method: function(request, response, path){
         console.log(path);
         headers['content-type'] = "text/html";
         if (dataFile.hasData(path)){
-          var file = fs.readFile(trail.join(__dirname,'..','data/sites',path), 'utf8',function(error,data){
-          if (error) {
-            response.writeHead(404,headers);
-            response.end();
-            console.log(error);
-          } else {
-            response.writeHead(200,headers);
-            response.end(data);
+          var files = dataFile.getData(path);
+          var body = "";
+          response.writeHead(200,headers);
+          for (var i = 0; i < files.length; i++) {
+            body+=('<a href="'+path+'/'+files[i]+'">'+files[i]+'</a><br />', 'utf8');
           }
-        });
+          response.end(body);
         } else {
           response.writeHead(404,headers);
           response.end();
